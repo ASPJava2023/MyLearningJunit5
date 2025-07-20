@@ -4,24 +4,49 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
+import java.util.logging.Logger;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.ClassOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.TestMethodOrder;
 
 @DisplayName("Test For Pizza Application")
-//@TestMethodOrder(OrderAnnotation.class)
+@TestInstance(Lifecycle.PER_CLASS)
 public class PizzaApplicationTest {
-
-	PizzaApplicationService pizzaApplicationService = new PizzaApplicationService();
+	static PizzaApplicationService pizzaApplicationService; 
+	private static final Logger logger =Logger.getLogger(PizzaApplicationTest.class.getName());
+	int quantity,price,deliveryPrice,offer;
+		
+	@BeforeAll
+	static void serviceObjectCreate() {
+		logger.info("Before All");
+		 pizzaApplicationService = new PizzaApplicationService();
+	}
+	
+	@BeforeEach
+	void SetvalueforEveryTestCase() {
+		quantity = 2;
+		price = 250;
+		deliveryPrice =50;
+		offer =20;
+		logger.info("Before each Test");
+	}
 	
 	@DisplayName("Test for  pizzaonDine")
 	@Test
 	@Order(value = 2)
 	public void pizzaonDineTest() {
-		int actualPrice = pizzaApplicationService.pizzaonDine(2, 250);
+		
+		int actualPrice = pizzaApplicationService.pizzaonDine(quantity, price);
 		int expectedPrice = 500;
 		assertEquals(actualPrice, expectedPrice);
 	}
@@ -30,7 +55,7 @@ public class PizzaApplicationTest {
 	@Test
 	@Order(value = 3)
 	public void pizzaOnDeliveryTest() {
-		int actualPrice = pizzaApplicationService.pizzaOnDelivery(2, 250, 50);
+		int actualPrice = pizzaApplicationService.pizzaOnDelivery(quantity, price, deliveryPrice);
 		int expectedPrice = 550;
 		assertEquals(actualPrice, expectedPrice);
 	}
@@ -38,7 +63,7 @@ public class PizzaApplicationTest {
 	@Test
 	@Order(value = 4)
 	public void sundayOfferTest() {
-		int actualPrice = pizzaApplicationService.sundayOffer(2, 250, 20);
+		int actualPrice = pizzaApplicationService.sundayOffer(quantity, price, offer);
 		int expectedPrice = 400;
 		assertEquals(actualPrice, expectedPrice);
 	}
@@ -57,7 +82,7 @@ public class PizzaApplicationTest {
 	public void partyForDeveloperTeamTest() {
 		assumeTrue("Dev".equals(System.getenv("ENV")),
 				()->"Not from Developer Team");
-		int actualPrice = pizzaApplicationService.sundayOffer(2, 250, 20);
+		int actualPrice = pizzaApplicationService.sundayOffer(quantity, price, offer);
 		int expectedPrice = 400;
 		assertEquals(actualPrice, expectedPrice);
 		}
@@ -72,10 +97,24 @@ public class PizzaApplicationTest {
 	
 	@Test
 	public void sundayOfferTestForGRE() {
-		int actualPrice = pizzaApplicationService.sundayOffer(2, 250, 20);
+		int actualPrice = pizzaApplicationService.sundayOffer(quantity, price, offer);
 		assumeTrue(System.getProperty("java.runtime.version").startsWith("17"));
 		int expectedPrice = 400;
 		assertEquals(actualPrice, expectedPrice);
 	}
 
+	@AfterAll
+	static void TaskToCleanPizzaApplicationServiceObject() {
+		pizzaApplicationService =null;
+		logger.info("After All clearn the object of  pizzaApplicationService");
+	}
+	
+	@AfterEach
+	void taskAllClean() {
+		logger.info("After  each Test");
+//		quantity =(Integer) null;
+//		price =(Integer) null;
+//		deliveryPrice =(Integer) null;
+//		offer = (Integer) null;
+	}
 }
