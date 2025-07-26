@@ -10,19 +10,23 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.ClassOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 @DisplayName("Test For Pizza Application")
 @TestInstance(Lifecycle.PER_CLASS)
+//@Tag(value = "Pass")
+
 public class PizzaApplicationTest {
 	static PizzaApplicationService pizzaApplicationService; 
+	
 	private static final Logger logger =Logger.getLogger(PizzaApplicationTest.class.getName());
 	int quantity,price,deliveryPrice,offer;
 		
@@ -44,6 +48,7 @@ public class PizzaApplicationTest {
 	@DisplayName("Test for  pizzaonDine")
 	@Test
 	@Order(value = 2)
+	@Tag(value ="Pass")
 	public void pizzaonDineTest() {
 		
 		int actualPrice = pizzaApplicationService.pizzaonDine(quantity, price);
@@ -54,14 +59,25 @@ public class PizzaApplicationTest {
 	@DisplayName("Test for pizzaOnDelivery")
 	@Test
 	@Order(value = 3)
+	@Tag(value ="Pass")
 	public void pizzaOnDeliveryTest() {
 		int actualPrice = pizzaApplicationService.pizzaOnDelivery(quantity, price, deliveryPrice);
 		int expectedPrice = 550;
 		assertEquals(actualPrice, expectedPrice);
 	}
+	
+	@DisplayName("Test for pizzaOnDelivery FailTest")
+	@Test
+	@Tag(value = "Fail")
+	public void pizzaOnDeliveryFailTest() {
+		int actualPrice = pizzaApplicationService.pizzaOnDelivery(quantity, price, deliveryPrice);
+		int expectedPrice = 450;
+		assertEquals(actualPrice, expectedPrice);
+	}
 
 	@Test
 	@Order(value = 4)
+	@Tag(value ="Pass")
 	public void sundayOfferTest() {
 		int actualPrice = pizzaApplicationService.sundayOffer(quantity, price, offer);
 		int expectedPrice = 400;
@@ -117,4 +133,5 @@ public class PizzaApplicationTest {
 //		deliveryPrice =(Integer) null;
 //		offer = (Integer) null;
 	}
-}
+	
+	}
