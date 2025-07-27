@@ -11,5 +11,9 @@ public class MyService {
 		return firstNumber+secondNumber;
 	}
 	
+	@GetMapping("/sub")
+	public double subtractNumber(double firstNumber, double secondNumber) {
+		return firstNumber -secondNumber;
+	}
 
 }
